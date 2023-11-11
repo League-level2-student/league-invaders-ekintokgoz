@@ -1,3 +1,5 @@
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
 public class LeagueInvaders {
@@ -20,7 +22,9 @@ public class LeagueInvaders {
 	void setup(int width, int height) {
 		frame.add(gamePanel);
 		frame.setVisible(true);
-		frame.setSize(width, height);
+		
+		gamePanel.setPreferredSize(new Dimension(width, height));
+		frame.pack();
 		frame.addKeyListener(gamePanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

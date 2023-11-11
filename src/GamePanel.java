@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final int GAME = 1;
 	final int END = 2;
 	int currentState = MENU;
-	RocketShip rocketShip = new RocketShip(250, 700, 50, 50);
+	RocketShip rocketShip = new RocketShip(250, 700, 50, 50, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
 
 	void updateMenuState() {  }
 	void updateGameState() {  }
@@ -34,6 +34,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawGameState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+		rocketShip.updatePos();
 		rocketShip.draw(g);
 	}
 	void drawEndState(Graphics g)  {
@@ -77,11 +78,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}else if(currentState == END){
 			updateEndState();
 		}
-		System.out.println("action");
 		repaint();
 	}
+	int counter = 0;
 	@Override
 	public void keyPressed(KeyEvent e) {
+		System.out.println(counter++);
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 			if (currentState == END) {
 				currentState = MENU;
@@ -90,20 +92,35 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		if(currentState == GAME) {
-			if (e.getKeyCode()==KeyEvent.VK_UP) {
-			    System.out.println("UP");
+			if (e.getKeyCode()==KeyEvent.VK_UP) { 
+				if(rocketShip.y > 0) {
+					rocketShip.isMoving = true;
+					rocketShip.direction = "up";
+				}
 			} else if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-			    System.out.println("DOWN");
+				if(rocketShip.y < 800-rocketShip.height) { 
+					rocketShip.isMoving = true;
+					rocketShip.direction = "down";
+				}
 			} else if (e.getKeyCode()==KeyEvent.VK_LEFT) {
-			    System.out.println("LEFT");
+				if(rocketShip.x > 0) { 			
+					rocketShip.isMoving = true;
+					rocketShip.direction = "left"; 
+				}				
 			} else if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
-			    System.out.println("RIGHT");
+				if(rocketShip.x < 500-rocketShip.width) {
+					rocketShip.isMoving = true;
+					rocketShip.direction = "right";
+				}
 			}
 		}
 	}
 	@Override
 	public void keyReleased(KeyEvent e) {
-
+		if(e.getKeyCode()==KeyEvent.VK_UP||e.getKeyCode()==KeyEvent.VK_DOWN||
+				e.getKeyCode()==KeyEvent.VK_RIGHT||e.getKeyCode()==KeyEvent.VK_LEFT) {
+			rocketShip.isMoving = false;
+		}
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
