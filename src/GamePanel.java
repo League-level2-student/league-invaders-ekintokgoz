@@ -15,10 +15,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final int GAME = 1;
 	final int END = 2;
 	int currentState = MENU;
+	Font titleFont;
+	Font subTitleFont;
+	Timer frameDraw;
 	RocketShip rocketShip = new RocketShip(250, 700, 50, 50, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+	ObjectManager objectManager = new ObjectManager(rocketShip);
+	
 
 	void updateMenuState() {  }
-	void updateGameState() {  }
+	void updateGameState() {
+		objectManager.update();
+	}
 	void updateEndState()  {  }
 
 	void drawMenuState(Graphics g) {
@@ -35,7 +42,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
 		rocketShip.updatePos();
-		rocketShip.draw(g);
+		objectManager.draw(g);
 	}
 	void drawEndState(Graphics g)  {
 		g.setColor(Color.RED);
@@ -47,10 +54,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("You killed enemies", 120, 350);
 		g.drawString("Press ENTER to Restart", 85, 500);
 	}
-
-	Font titleFont;
-	Font subTitleFont;
-	Timer frameDraw;
 
 	GamePanel() {
 		titleFont = new Font("Arial", Font.PLAIN, 48);
