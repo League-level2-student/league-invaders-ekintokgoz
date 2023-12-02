@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -18,8 +20,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Font titleFont;
 	Font subTitleFont;
 	Timer frameDraw;
+	Timer alienSpawn;
 	RocketShip rocketShip = new RocketShip(250, 700, 50, 50, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
 	ObjectManager objectManager = new ObjectManager(rocketShip);
+	public static BufferedImage image;
+	public static boolean needImage = true;
+	public static boolean gotImage = false;	
 	
 
 	void updateMenuState() {  }
@@ -39,8 +45,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.drawString("Press SPACE for instructions", 75, 500);
 	}
 	void drawGameState(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+		if (gotImage) {
+			g.drawImage(image, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
+		} else {
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+		}
 		rocketShip.updatePos();
 		objectManager.draw(g);
 	}
@@ -60,6 +70,26 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		subTitleFont = new Font("Arial", Font.PLAIN, 28);
 		frameDraw = new Timer(1000/60,this);
 		frameDraw.start();
+		if (needImage) {
+		    loadImage ("space.png");
+		}
+	}
+	
+	void loadImage(String imageFile) {
+	    if (needImage) {
+	        try {
+	            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+		    gotImage = true;
+	        } catch (Exception e) {
+	            
+	        }
+	        needImage = false;
+	    }
+	}
+	
+	void startGame() {
+	    alienSpawn = new Timer(1000 , objectManager);
+	    alienSpawn.start();
 	}
 
 	@Override
@@ -92,9 +122,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 				currentState = MENU;
 			} else {
 				currentState++;
+				if(currentState == GAME) {
+				startGame();
+			} else if(currentState == END) {
+				alienSpawn.stop();
 			}
+			} 
 		}
 		if(currentState == GAME) {
+			if(e.getKeyCode()==KeyEvent.VK_SPACE) {
+				objectManager.addProjectile(rocketShip.getProjectile());
+			}
 			if (e.getKeyCode()==KeyEvent.VK_UP) { 
 				if(rocketShip.y > 0) {
 					rocketShip.isMoving = true;
