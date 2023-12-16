@@ -13,10 +13,10 @@ import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
-	final int MENU = 0;
-	final int GAME = 1;
-	final int END = 2;
-	int currentState = MENU;
+	static final int MENU = 0;
+	static final int GAME = 1;
+	static final int END = 2;
+	static int currentState = MENU;
 	Font titleFont;
 	Font subTitleFont;
 	Timer frameDraw;
@@ -88,7 +88,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 	
 	void startGame() {
-	    alienSpawn = new Timer(1000 , objectManager);
+		alienSpawn = new Timer(1000 , objectManager);
 	    alienSpawn.start();
 	}
 

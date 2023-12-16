@@ -68,6 +68,7 @@ public class RocketShip extends GameObject{
 				}
 			}
 		}
+		super.update();
 	}
 
 	void loadImage(String imageFile) {
