@@ -26,7 +26,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;	
-	
+
 
 	void updateMenuState() {  }
 	void updateGameState() {
@@ -53,6 +53,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		rocketShip.updatePos();
 		objectManager.draw(g);
+		g.setFont(subTitleFont);
+		g.setColor(Color.WHITE);
+		g.drawString("Score: " + objectManager.getScore(), 0, LeagueInvaders.HEIGHT);
 	}
 	void drawEndState(Graphics g)  {
 		g.setColor(Color.RED);
@@ -71,25 +74,25 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		frameDraw = new Timer(1000/60,this);
 		frameDraw.start();
 		if (needImage) {
-		    loadImage ("space.png");
+			loadImage ("space.png");
+		}		
+	}
+
+	void loadImage(String imageFile) {
+		if (needImage) {
+			try {
+				image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+				gotImage = true;
+			} catch (Exception e) {
+
+			}
+			needImage = false;
 		}
 	}
-	
-	void loadImage(String imageFile) {
-	    if (needImage) {
-	        try {
-	            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
-		    gotImage = true;
-	        } catch (Exception e) {
-	            
-	        }
-	        needImage = false;
-	    }
-	}
-	
+
 	void startGame() {
 		alienSpawn = new Timer(1000 , objectManager);
-	    alienSpawn.start();
+		alienSpawn.start();
 	}
 
 	@Override
@@ -119,14 +122,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		System.out.println(counter++);
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 			if (currentState == END) {
-				currentState = MENU;
-			} else {
+				currentState = MENU;	
+				rocketShip = new RocketShip(250, 700, 50, 50, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+				objectManager = new ObjectManager(rocketShip = new RocketShip(250, 700, 50, 50, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT));
+				} else {
 				currentState++;
 				if(currentState == GAME) {
-				startGame();
-			} else if(currentState == END) {
-				alienSpawn.stop();
-			}
+					startGame();
+				} else if(currentState == END) {
+					alienSpawn.stop();
+				}
 			} 
 		}
 		if(currentState == GAME) {
